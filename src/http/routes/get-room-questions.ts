@@ -4,7 +4,7 @@ import { z } from 'zod/v4'
 import { db } from '../../db/connection.ts'
 import { schema } from '../../db/schema/index.ts'
 
-export const getRoomsQuestions: FastifyPluginCallbackZod = (app) => {
+export const getRoomQuestions: FastifyPluginCallbackZod = (app) => {
   app.get(
     '/rooms/:roomId/questions',
     {
@@ -16,6 +16,7 @@ export const getRoomsQuestions: FastifyPluginCallbackZod = (app) => {
     },
     async (request) => {
       const { roomId } = request.params
+
       const result = await db
         .select({
           id: schema.questions.id,
@@ -26,6 +27,7 @@ export const getRoomsQuestions: FastifyPluginCallbackZod = (app) => {
         .from(schema.questions)
         .where(eq(schema.questions.roomId, roomId))
         .orderBy(desc(schema.questions.createdAt))
+
       return result
     }
   )
